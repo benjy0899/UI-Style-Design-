@@ -1,0 +1,5 @@
+{
+  "name": "UI Style Design Generator",
+  "description": "An interactive gallery of 20 unique UI style design systems. Explore creative combinations of fonts, colors, and layouts to inspire your next UI/UX project. Preview each style, and copy the configuration as JSON, an AI prompt, or code snippets.",
+  "requestFramePermissions": []
+}
