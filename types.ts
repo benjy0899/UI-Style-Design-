@@ -10,6 +10,9 @@ export interface UIStyle {
     accent: string;
     dark: string;
     light: string;
+    success?: string;
+    warning?: string;
+    error?: string;
     [key: string]: string;
   };
   layout: string;
@@ -21,6 +24,9 @@ export interface UIStyle {
       primary: string;
       accent: string;
       neutral: string;
+      success?: string;
+      warning?: string;
+      error?: string;
       [key: string]: string;
     };
     buttonClasses: string;
@@ -30,8 +36,10 @@ export interface UIStyle {
     headerClasses: string;
     tagClasses: string;
     iconButtonClasses: string;
-    // New properties for shadcn-style dashboard
+    // Enhanced properties for comprehensive UI
     inputClasses?: string;
+    selectClasses?: string;
+    textareaClasses?: string;
     tabClasses?: {
       container?: string;
       base?: string;
@@ -40,5 +48,15 @@ export interface UIStyle {
     };
     kpiCardClasses?: string;
     avatarClasses?: string;
+    badgeClasses?: string;
+    progressClasses?: string;
+    navLinkClasses?: string;
   };
+}
+
+export interface CustomizationOptions {
+  borderRadius: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  spacing: 'tight' | 'normal' | 'relaxed' | 'loose';
+  shadows: 'none' | 'subtle' | 'medium' | 'strong';
+  animations: 'none' | 'subtle' | 'normal' | 'playful';
 }

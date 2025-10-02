@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { UIStyle } from '../types';
 import { 
   ActivityIcon, 
@@ -47,6 +47,7 @@ interface StylePreviewProps {
 }
 
 const StylePreview: React.FC<StylePreviewProps> = ({ style }) => {
+  const [activePreviewPage, setActivePreviewPage] = useState<'dashboard' | 'profile' | 'settings' | 'analytics'>('dashboard');
   const { name, fonts, previewConfig } = style;
   const {
     palette,
@@ -68,12 +69,41 @@ const StylePreview: React.FC<StylePreviewProps> = ({ style }) => {
     color: palette.text 
   } as React.CSSProperties;
 
+  const previewPages = [
+    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+    { id: 'profile', label: 'Profile', icon: '👤' },
+    { id: 'settings', label: 'Settings', icon: '⚙️' },
+    { id: 'analytics', label: 'Analytics', icon: '📈' }
+  ] as const;
+
   return (
     <section className="mb-8">
-      <h2 className={`text-3xl font-bold mb-1 text-white font-primary`}>
-        {name}
-      </h2>
-      <p className="text-gray-400 mb-4">Dashboard Preview</p>
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className={`text-3xl font-bold mb-1 text-white font-primary`}>
+            {name}
+          </h2>
+          <p className="text-gray-400">Live Preview</p>
+        </div>
+        
+        {/* Preview Page Selector */}
+        <div className="flex bg-gray-800/50 rounded-lg p-1">
+          {previewPages.map((page) => (
+            <button
+              key={page.id}
+              onClick={() => setActivePreviewPage(page.id)}
+              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                activePreviewPage === page.id
+                  ? 'bg-blue-500 text-white'
+                  : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+              }`}
+            >
+              <span>{page.icon}</span>
+              {page.label}
+            </button>
+          ))}
+        </div>
+      </div>
       
       <style>
         {`
@@ -133,48 +163,80 @@ const StylePreview: React.FC<StylePreviewProps> = ({ style }) => {
           </div>
         </div>
 
-        <div className={`${tabClasses?.container || ''} animate-content-enter`} style={{ animationDelay: '200ms' }}>
-          <nav className="flex space-x-2" aria-label="Tabs">
-            <button className={`${tabClasses?.base} ${tabClasses?.active}`}>Overview</button>
-            <button className={`${tabClasses?.base} ${tabClasses?.inactive}`}>Analytics</button>
-            <button className={`${tabClasses?.base} ${tabClasses?.inactive}`}>Reports</button>
-            <button className={`${tabClasses?.base} ${tabClasses?.inactive}`}>Notifications</button>
-          </nav>
-        </div>
+        {/* Render different pages based on selection */}
+        {activePreviewPage === 'dashboard' && (
+          <>
+            <div className={`${tabClasses?.container || ''} animate-content-enter`} style={{ animationDelay: '200ms' }}>
+              <nav className="flex space-x-2" aria-label="Tabs">
+                <button className={`${tabClasses?.base} ${tabClasses?.active}`}>Overview</button>
+                <button className={`${tabClasses?.base} ${tabClasses?.inactive}`}>Analytics</button>
+                <button className={`${tabClasses?.base} ${tabClasses?.inactive}`}>Reports</button>
+                <button className={`${tabClasses?.base} ${tabClasses?.inactive}`}>Notifications</button>
+              </nav>
+            </div>
 
-        <main className="pt-6">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <KpiCard title="Total Revenue" value="$45,231.89" change="+20.1% from last month" Icon={DollarSignIcon} styleClass={kpiCardBase} animationDelay={300} tooltipText="Total revenue generated this period." />
-            <KpiCard title="Subscriptions" value="+2350" change="+180.1% from last month" Icon={UsersIcon} styleClass={kpiCardBase} animationDelay={400} tooltipText="New subscribers this month." />
-            <KpiCard title="Sales" value="+12,234" change="+19% from last month" Icon={CreditCardIcon} styleClass={kpiCardBase} animationDelay={500} tooltipText="Total number of sales." />
-            <KpiCard title="Active Now" value="+573" change="+201 since last hour" Icon={ActivityIcon} styleClass={kpiCardBase} animationDelay={600} tooltipText="Users currently active on the platform." />
-          </div>
-          <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <div className={`${cardBase} lg:col-span-4 animate-content-enter transition-transform duration-300 hover:-translate-y-1`} style={{ animationDelay: '700ms' }}>
-              <h4 className="text-lg font-semibold font-primary">Overview</h4>
-              <div className="relative h-72 mt-4 rounded-md" style={{ backgroundColor: palette.neutral }}>
-                 <OverviewChart palette={palette} />
-                 {/* Tooltip for the chart's data point */}
-                 <div className="absolute" style={{ top: 'calc(50px / 200 * 100% - 8px)', left: 'calc(220px / 400 * 100% - 8px)'}}>
-                    <Tooltip text="Peak Performance: $12,450">
-                       <div className="w-4 h-4 rounded-full" />
-                    </Tooltip>
-                 </div>
+            <main className="pt-6">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <KpiCard title="Total Revenue" value="$45,231.89" change="+20.1% from last month" Icon={DollarSignIcon} styleClass={kpiCardBase} animationDelay={300} tooltipText="Total revenue generated this period." />
+                <KpiCard title="Subscriptions" value="+2350" change="+180.1% from last month" Icon={UsersIcon} styleClass={kpiCardBase} animationDelay={400} tooltipText="New subscribers this month." />
+                <KpiCard title="Sales" value="+12,234" change="+19% from last month" Icon={CreditCardIcon} styleClass={kpiCardBase} animationDelay={500} tooltipText="Total number of sales." />
+                <KpiCard title="Active Now" value="+573" change="+201 since last hour" Icon={ActivityIcon} styleClass={kpiCardBase} animationDelay={600} tooltipText="Users currently active on the platform." />
               </div>
-            </div>
-            <div className={`${cardBase} lg:col-span-3 animate-content-enter transition-transform duration-300 hover:-translate-y-1`} style={{ animationDelay: '800ms' }}>
-              <h4 className="text-lg font-semibold font-primary">Recent Sales</h4>
-              <p className="text-sm opacity-60">You made 265 sales this month.</p>
-              <div className="mt-4 space-y-1">
-                <RecentSaleItem name="Olivia Martin" email="olivia.martin@email.com" amount="+$1,999.00" avatarClasses={avatarClasses} />
-                <RecentSaleItem name="Jackson Lee" email="jackson.lee@email.com" amount="+$39.00" avatarClasses={avatarClasses} />
-                <RecentSaleItem name="Isabella Nguyen" email="isabella.nguyen@email.com" amount="+$299.00" avatarClasses={avatarClasses} />
-                <RecentSaleItem name="William Kim" email="will@email.com" amount="+$99.00" avatarClasses={avatarClasses} />
-                <RecentSaleItem name="Sofia Davis" email="sofia.davis@email.com" amount="+$39.00" avatarClasses={avatarClasses} />
+              <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                <div className={`${cardBase} lg:col-span-4 animate-content-enter transition-transform duration-300 hover:-translate-y-1`} style={{ animationDelay: '700ms' }}>
+                  <h4 className="text-lg font-semibold font-primary">Overview</h4>
+                  <div className="relative h-72 mt-4 rounded-md" style={{ backgroundColor: palette.neutral }}>
+                     <OverviewChart palette={palette} />
+                     <div className="absolute" style={{ top: 'calc(50px / 200 * 100% - 8px)', left: 'calc(220px / 400 * 100% - 8px)'}}>
+                        <Tooltip text="Peak Performance: $12,450">
+                           <div className="w-4 h-4 rounded-full" />
+                        </Tooltip>
+                     </div>
+                  </div>
+                </div>
+                <div className={`${cardBase} lg:col-span-3 animate-content-enter transition-transform duration-300 hover:-translate-y-1`} style={{ animationDelay: '800ms' }}>
+                  <h4 className="text-lg font-semibold font-primary">Recent Sales</h4>
+                  <p className="text-sm opacity-60">You made 265 sales this month.</p>
+                  <div className="mt-4 space-y-1">
+                    <RecentSaleItem name="Olivia Martin" email="olivia.martin@email.com" amount="+$1,999.00" avatarClasses={avatarClasses} />
+                    <RecentSaleItem name="Jackson Lee" email="jackson.lee@email.com" amount="+$39.00" avatarClasses={avatarClasses} />
+                    <RecentSaleItem name="Isabella Nguyen" email="isabella.nguyen@email.com" amount="+$299.00" avatarClasses={avatarClasses} />
+                    <RecentSaleItem name="William Kim" email="will@email.com" amount="+$99.00" avatarClasses={avatarClasses} />
+                    <RecentSaleItem name="Sofia Davis" email="sofia.davis@email.com" amount="+$39.00" avatarClasses={avatarClasses} />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </main>
+            </main>
+          </>
+        )}
+
+        {activePreviewPage === 'profile' && (
+          <ProfilePage 
+            cardBase={cardBase} 
+            buttonClasses={buttonClasses} 
+            inputClasses={previewConfig.inputClasses || ''} 
+            avatarClasses={avatarClasses}
+            palette={palette}
+          />
+        )}
+
+        {activePreviewPage === 'settings' && (
+          <SettingsPage 
+            cardBase={cardBase} 
+            buttonClasses={buttonClasses} 
+            inputClasses={previewConfig.inputClasses || ''} 
+            tabClasses={tabClasses}
+            palette={palette}
+          />
+        )}
+
+        {activePreviewPage === 'analytics' && (
+          <AnalyticsPage 
+            cardBase={cardBase} 
+            kpiCardBase={kpiCardBase} 
+            palette={palette}
+          />
+        )}
       </div>
     </section>
   );
@@ -258,6 +320,259 @@ const OverviewChart: React.FC<{ palette: UIStyle['previewConfig']['palette'] }> 
     </svg>
   );
 };
+
+// ============================================================================
+// Additional Page Components
+// ============================================================================
+
+interface ProfilePageProps {
+  cardBase: string;
+  buttonClasses: string;
+  inputClasses: string;
+  avatarClasses?: string;
+  palette: UIStyle['previewConfig']['palette'];
+}
+
+const ProfilePage: React.FC<ProfilePageProps> = ({ cardBase, buttonClasses, inputClasses, avatarClasses, palette }) => (
+  <main className="pt-6 animate-content-enter">
+    <div className="grid gap-6 md:grid-cols-3">
+      <div className={`${cardBase} md:col-span-1`}>
+        <div className="text-center">
+          <div className={`${avatarClasses} w-24 h-24 mx-auto mb-4 flex items-center justify-center text-2xl font-bold`} 
+               style={{ backgroundColor: palette.primary, color: palette.bg }}>
+            JD
+          </div>
+          <h3 className="text-xl font-semibold font-primary">John Doe</h3>
+          <p className="text-sm opacity-60 mb-4">Product Designer</p>
+          <button className={buttonClasses}>Edit Profile</button>
+        </div>
+        <div className="mt-6 space-y-3">
+          <div className="flex justify-between">
+            <span className="text-sm opacity-60">Projects</span>
+            <span className="font-semibold">24</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-sm opacity-60">Followers</span>
+            <span className="font-semibold">1.2k</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-sm opacity-60">Following</span>
+            <span className="font-semibold">342</span>
+          </div>
+        </div>
+      </div>
+      
+      <div className={`${cardBase} md:col-span-2`}>
+        <h4 className="text-lg font-semibold font-primary mb-4">Personal Information</h4>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="block text-sm font-medium mb-2">First Name</label>
+            <input type="text" value="John" className={inputClasses} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Last Name</label>
+            <input type="text" value="Doe" className={inputClasses} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Email</label>
+            <input type="email" value="john.doe@example.com" className={inputClasses} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Phone</label>
+            <input type="tel" value="+1 (555) 123-4567" className={inputClasses} />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium mb-2">Bio</label>
+            <textarea 
+              className={`${inputClasses} h-20 resize-none`}
+              value="Passionate product designer with 5+ years of experience creating user-centered digital experiences."
+            />
+          </div>
+        </div>
+        <div className="flex gap-3 mt-6">
+          <button className={buttonClasses}>Save Changes</button>
+          <button className={buttonClasses.replace(palette.primary, 'transparent').replace('text-white', `text-[${palette.primary}]`) + ` border border-[${palette.primary}]`}>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+);
+
+interface SettingsPageProps {
+  cardBase: string;
+  buttonClasses: string;
+  inputClasses: string;
+  tabClasses?: UIStyle['previewConfig']['tabClasses'];
+  palette: UIStyle['previewConfig']['palette'];
+}
+
+const SettingsPage: React.FC<SettingsPageProps> = ({ cardBase, buttonClasses, inputClasses, tabClasses, palette }) => (
+  <main className="pt-6 animate-content-enter">
+    <div className={`${tabClasses?.container || ''} mb-6`}>
+      <nav className="flex space-x-2" aria-label="Settings Tabs">
+        <button className={`${tabClasses?.base} ${tabClasses?.active}`}>General</button>
+        <button className={`${tabClasses?.base} ${tabClasses?.inactive}`}>Security</button>
+        <button className={`${tabClasses?.base} ${tabClasses?.inactive}`}>Notifications</button>
+        <button className={`${tabClasses?.base} ${tabClasses?.inactive}`}>Billing</button>
+      </nav>
+    </div>
+
+    <div className="grid gap-6">
+      <div className={cardBase}>
+        <h4 className="text-lg font-semibold font-primary mb-4">Appearance</h4>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Theme</label>
+            <select className={inputClasses}>
+              <option>Dark</option>
+              <option>Light</option>
+              <option>System</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Language</label>
+            <select className={inputClasses}>
+              <option>English</option>
+              <option>Spanish</option>
+              <option>French</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className={cardBase}>
+        <h4 className="text-lg font-semibold font-primary mb-4">Privacy</h4>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">Profile Visibility</p>
+              <p className="text-sm opacity-60">Make your profile visible to other users</p>
+            </div>
+            <div className="relative">
+              <input type="checkbox" className="sr-only" defaultChecked />
+              <div className="w-10 h-6 rounded-full" style={{ backgroundColor: palette.primary }}></div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">Email Notifications</p>
+              <p className="text-sm opacity-60">Receive notifications via email</p>
+            </div>
+            <div className="relative">
+              <input type="checkbox" className="sr-only" />
+              <div className="w-10 h-6 bg-gray-300 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className={cardBase}>
+        <h4 className="text-lg font-semibold font-primary mb-4">Danger Zone</h4>
+        <div className="space-y-4">
+          <div className="p-4 border border-red-500/50 rounded-lg">
+            <h5 className="font-medium text-red-400 mb-2">Delete Account</h5>
+            <p className="text-sm opacity-60 mb-3">Once you delete your account, there is no going back. Please be certain.</p>
+            <button className="bg-red-500 text-white font-semibold py-2 px-4 rounded hover:bg-red-600 transition-colors">
+              Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+);
+
+interface AnalyticsPageProps {
+  cardBase: string;
+  kpiCardBase: string;
+  palette: UIStyle['previewConfig']['palette'];
+}
+
+const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ cardBase, kpiCardBase, palette }) => (
+  <main className="pt-6 animate-content-enter">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
+      <div className={kpiCardBase}>
+        <h5 className="text-sm font-medium opacity-80">Page Views</h5>
+        <div className="text-2xl font-bold font-primary">124,592</div>
+        <p className="text-xs opacity-60">+12.5% from last week</p>
+      </div>
+      <div className={kpiCardBase}>
+        <h5 className="text-sm font-medium opacity-80">Unique Visitors</h5>
+        <div className="text-2xl font-bold font-primary">8,429</div>
+        <p className="text-xs opacity-60">+8.2% from last week</p>
+      </div>
+      <div className={kpiCardBase}>
+        <h5 className="text-sm font-medium opacity-80">Bounce Rate</h5>
+        <div className="text-2xl font-bold font-primary">24.3%</div>
+        <p className="text-xs opacity-60">-2.1% from last week</p>
+      </div>
+      <div className={kpiCardBase}>
+        <h5 className="text-sm font-medium opacity-80">Avg. Session</h5>
+        <div className="text-2xl font-bold font-primary">3m 42s</div>
+        <p className="text-xs opacity-60">+15s from last week</p>
+      </div>
+    </div>
+
+    <div className="grid gap-6 md:grid-cols-2">
+      <div className={cardBase}>
+        <h4 className="text-lg font-semibold font-primary mb-4">Traffic Sources</h4>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Direct</span>
+            <div className="flex items-center gap-2">
+              <div className="w-20 h-2 bg-gray-300 rounded-full overflow-hidden">
+                <div className="w-3/5 h-full rounded-full" style={{ backgroundColor: palette.primary }}></div>
+              </div>
+              <span className="text-sm font-medium">60%</span>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Search</span>
+            <div className="flex items-center gap-2">
+              <div className="w-20 h-2 bg-gray-300 rounded-full overflow-hidden">
+                <div className="w-1/3 h-full rounded-full" style={{ backgroundColor: palette.accent }}></div>
+              </div>
+              <span className="text-sm font-medium">25%</span>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm">Social</span>
+            <div className="flex items-center gap-2">
+              <div className="w-20 h-2 bg-gray-300 rounded-full overflow-hidden">
+                <div className="w-1/6 h-full bg-gray-500 rounded-full"></div>
+              </div>
+              <span className="text-sm font-medium">15%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className={cardBase}>
+        <h4 className="text-lg font-semibold font-primary mb-4">Top Pages</h4>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-sm">/dashboard</span>
+            <span className="text-sm font-medium">2,847 views</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm">/profile</span>
+            <span className="text-sm font-medium">1,923 views</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm">/settings</span>
+            <span className="text-sm font-medium">1,456 views</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm">/analytics</span>
+            <span className="text-sm font-medium">892 views</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+);
 
 
 export default StylePreview;
