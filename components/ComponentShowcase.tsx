@@ -6,120 +6,183 @@ interface ComponentShowcaseProps {
 }
 
 const ComponentShowcase: React.FC<ComponentShowcaseProps> = ({ style }) => {
-  const { previewConfig } = style;
-  const { palette, buttonClasses, cardClasses, inputClasses } = previewConfig;
+  const { previewConfig, fonts } = style;
+  const { palette, buttonClasses, cardClasses, inputClasses, tagClasses } = previewConfig;
+
+  const dynamicStyles = {
+    '--font-primary': `"${fonts.primary}", sans-serif`,
+    '--font-secondary': `"${fonts.secondary}", sans-serif`,
+  } as React.CSSProperties;
 
   return (
-    <div className="mt-8">
-      <h3 className="text-2xl font-bold text-white mb-6 font-primary">Component Showcase</h3>
+    <div className="mt-12" style={dynamicStyles}>
+      <h2 className="text-3xl font-bold mb-8 font-primary tracking-wider" style={{ color: palette.primary }}>
+        Component Showcase
+      </h2>
       
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {/* Buttons */}
-        <div className={cardClasses}>
-          <h4 className="text-lg font-semibold mb-4 font-primary">Buttons</h4>
-          <div className="space-y-3">
-            <button className={buttonClasses}>Primary Button</button>
-            <button className={`${buttonClasses} opacity-75`}>Secondary Button</button>
-            <button className={`${buttonClasses} opacity-50`} disabled>Disabled Button</button>
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {/* Typography Showcase */}
+        <div className={`${cardClasses} p-6`}>
+          <h4 className="text-lg font-semibold mb-6 font-primary" style={{ color: palette.primary }}>Typography</h4>
+          <div className="space-y-4">
+            <div>
+              <p className="text-xs font-secondary mb-1" style={{ color: palette.text, opacity: 0.7 }}>Primary Font: {fonts.primary}</p>
+              <h3 className="text-2xl font-bold font-primary" style={{ color: palette.primary }}>
+                The Quick Brown Fox
+              </h3>
+            </div>
+            <div>
+              <p className="text-xs font-secondary mb-1" style={{ color: palette.text, opacity: 0.7 }}>Secondary Font: {fonts.secondary}</p>
+              <p className="text-base font-secondary" style={{ color: palette.text }}>
+                Jumps over the lazy dog. This demonstrates the secondary font family in use.
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Form Elements */}
-        <div className={cardClasses}>
-          <h4 className="text-lg font-semibold mb-4 font-primary">Form Elements</h4>
-          <div className="space-y-3">
+        {/* Dynamic Style Buttons */}
+        <div className={`${cardClasses} p-6`}>
+          <h4 className="text-lg font-semibold mb-6 font-primary" style={{ color: palette.primary }}>Buttons</h4>
+          <div className="space-y-4">
+            <button className={`${buttonClasses} w-full`}>Primary Button</button>
+            <button className={`${buttonClasses} w-full opacity-75`}>Secondary Button</button>
+            <button 
+              className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 border font-primary"
+              style={{ 
+                backgroundColor: 'transparent',
+                color: palette.accent,
+                borderColor: palette.accent
+              }}
+            >
+              Accent Button
+            </button>
+            <button className={`${buttonClasses} w-full opacity-50`} disabled>Disabled Button</button>
+          </div>
+        </div>
+
+        {/* Dynamic Form Elements */}
+        <div className={`${cardClasses} p-6`}>
+          <h4 className="text-lg font-semibold mb-6 font-primary" style={{ color: palette.primary }}>Form Elements</h4>
+          <div className="space-y-4">
             <input 
               type="text" 
               placeholder="Text Input" 
-              className={inputClasses || 'bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white w-full'} 
+              className={inputClasses || `w-full py-3 px-4 rounded-lg border font-secondary`}
+              style={{ 
+                backgroundColor: palette.neutral,
+                color: palette.text,
+                borderColor: palette.primary + '50'
+              }}
             />
-            <select className={inputClasses || 'bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white w-full'}>
+            <select 
+              className={inputClasses || `w-full py-3 px-4 rounded-lg border font-secondary`}
+              style={{ 
+                backgroundColor: palette.neutral,
+                color: palette.text,
+                borderColor: palette.primary + '50'
+              }}
+            >
               <option>Select Option</option>
               <option>Option 1</option>
               <option>Option 2</option>
+              <option>Option 3</option>
             </select>
             <textarea 
               placeholder="Textarea" 
-              className={`${inputClasses || 'bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white w-full'} h-20 resize-none`}
+              className={`${inputClasses || `w-full py-3 px-4 rounded-lg border font-secondary`} h-20 resize-none`}
+              style={{ 
+                backgroundColor: palette.neutral,
+                color: palette.text,
+                borderColor: palette.primary + '50'
+              }}
             />
           </div>
         </div>
 
-        {/* Navigation */}
-        <div className={cardClasses}>
-          <h4 className="text-lg font-semibold mb-4 font-primary">Navigation</h4>
-          <nav className="space-y-2">
-            <a href="#" className="block py-2 px-3 rounded hover:bg-current/10 transition-colors" style={{ color: palette.primary }}>
-              Dashboard
+        {/* Dynamic Navigation & Badges */}
+        <div className={`${cardClasses} p-6`}>
+          <h4 className="text-lg font-semibold mb-6 font-primary" style={{ color: palette.primary }}>Navigation & Badges</h4>
+          <nav className="space-y-3 mb-6">
+            <a 
+              href="#" 
+              className="block py-3 px-4 rounded-lg transition-all duration-300 font-secondary"
+              style={{ 
+                backgroundColor: palette.primary + '20',
+                color: palette.primary,
+                border: `1px solid ${palette.primary}50`
+              }}
+            >
+              📊 Dashboard
             </a>
-            <a href="#" className="block py-2 px-3 rounded hover:bg-current/10 transition-colors opacity-60">
-              Analytics
+            <a 
+              href="#" 
+              className="block py-3 px-4 rounded-lg transition-all duration-300 font-secondary opacity-70 hover:opacity-100"
+              style={{ color: palette.text }}
+            >
+              📈 Analytics
             </a>
-            <a href="#" className="block py-2 px-3 rounded hover:bg-current/10 transition-colors opacity-60">
-              Settings
+            <a 
+              href="#" 
+              className="block py-3 px-4 rounded-lg transition-all duration-300 font-secondary opacity-70 hover:opacity-100"
+              style={{ color: palette.text }}
+            >
+              ⚙️ Settings
             </a>
           </nav>
-        </div>
-
-        {/* Cards */}
-        <div className={cardClasses}>
-          <h4 className="text-lg font-semibold mb-4 font-primary">Card Variations</h4>
+          
           <div className="space-y-3">
-            <div className="p-3 rounded border border-current/20">
-              <h5 className="font-medium">Simple Card</h5>
-              <p className="text-sm opacity-60">Card description</p>
-            </div>
-            <div className="p-3 rounded" style={{ backgroundColor: palette.primary, color: palette.bg }}>
-              <h5 className="font-medium">Primary Card</h5>
-              <p className="text-sm opacity-80">Highlighted content</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Badges & Tags */}
-        <div className={cardClasses}>
-          <h4 className="text-lg font-semibold mb-4 font-primary">Badges & Tags</h4>
-          <div className="flex flex-wrap gap-2">
-            <span className="px-2 py-1 text-xs rounded-full" style={{ backgroundColor: palette.primary, color: palette.bg }}>
+            <span className={tagClasses || `inline-block px-3 py-1 text-xs font-medium rounded-full`} style={{ backgroundColor: palette.primary, color: palette.bg }}>
               Primary
             </span>
-            <span className="px-2 py-1 text-xs rounded-full" style={{ backgroundColor: palette.accent, color: palette.text }}>
+            <span className={tagClasses || `inline-block px-3 py-1 text-xs font-medium rounded-full`} style={{ backgroundColor: palette.accent, color: palette.text }}>
               Accent
             </span>
-            <span className="px-2 py-1 text-xs rounded-full border border-current/30">
+            <span className={tagClasses || `inline-block px-3 py-1 text-xs font-medium rounded-full border`} style={{ borderColor: palette.primary, color: palette.primary }}>
               Outline
-            </span>
-            <span className="px-2 py-1 text-xs rounded-full bg-green-500 text-white">
-              Success
-            </span>
-            <span className="px-2 py-1 text-xs rounded-full bg-red-500 text-white">
-              Error
             </span>
           </div>
         </div>
 
-        {/* Progress & Loading */}
-        <div className={cardClasses}>
-          <h4 className="text-lg font-semibold mb-4 font-primary">Progress & Loading</h4>
-          <div className="space-y-4">
+        {/* Dynamic Card Variations */}
+        <div className={`${cardClasses} p-6 md:col-span-2`}>
+          <h4 className="text-lg font-semibold mb-6 font-primary" style={{ color: palette.primary }}>Card Variations</h4>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="p-4 rounded-lg border" style={{ borderColor: palette.primary + '30', backgroundColor: palette.neutral }}>
+              <h5 className="font-primary font-semibold mb-2" style={{ color: palette.primary }}>Simple Card</h5>
+              <p className="font-secondary text-sm opacity-80" style={{ color: palette.text }}>Basic card with border styling</p>
+            </div>
+            <div className="p-4 rounded-lg" style={{ backgroundColor: palette.accent, color: palette.bg }}>
+              <h5 className="font-primary font-semibold mb-2">Accent Card</h5>
+              <p className="font-secondary text-sm opacity-90">Highlighted content card</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Dynamic Progress & Loading */}
+        <div className={`${cardClasses} p-6`}>
+          <h4 className="text-lg font-semibold mb-6 font-primary" style={{ color: palette.primary }}>Progress & Loading</h4>
+          <div className="space-y-6">
             <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>Progress</span>
-                <span>75%</span>
+              <div className="flex justify-between text-sm mb-2 font-secondary">
+                <span style={{ color: palette.text }}>Progress</span>
+                <span style={{ color: palette.primary }}>75%</span>
               </div>
-              <div className="w-full bg-gray-300 rounded-full h-2">
+              <div className="w-full rounded-full h-3 overflow-hidden" style={{ backgroundColor: palette.neutral }}>
                 <div 
-                  className="h-2 rounded-full transition-all duration-300" 
-                  style={{ backgroundColor: palette.primary, width: '75%' }}
+                  className="h-full rounded-full transition-all duration-500" 
+                  style={{ 
+                    backgroundColor: palette.primary,
+                    width: '75%'
+                  }}
                 ></div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <div 
-                className="w-4 h-4 rounded-full animate-spin border-2 border-current border-t-transparent"
+                className="w-5 h-5 rounded-full animate-spin border-2 border-t-transparent"
                 style={{ borderColor: palette.primary, borderTopColor: 'transparent' }}
               ></div>
-              <span className="text-sm">Loading...</span>
+              <span className="text-sm font-secondary" style={{ color: palette.text }}>Loading...</span>
             </div>
           </div>
         </div>

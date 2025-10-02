@@ -26,9 +26,9 @@ const Tooltip: React.FC<TooltipProps> = ({ text, children }) => {
         className={`
           absolute bottom-full mb-2 w-max max-w-xs z-10
           invisible group-hover:visible opacity-0 group-hover:opacity-100
-          bg-gray-900/80 backdrop-blur-sm text-white text-xs rounded-md px-2 py-1
+          bg-bio-deep/90 backdrop-blur-sm text-bio-teal text-xs rounded-md px-3 py-2
           transition-opacity duration-200 pointer-events-none
-          font-primary
+          font-secondary border border-bio-teal/30
         `}
       >
         {text}
@@ -77,26 +77,35 @@ const StylePreview: React.FC<StylePreviewProps> = ({ style }) => {
   ] as const;
 
   return (
-    <section className="mb-8">
-      <div className="flex items-center justify-between mb-4">
+    <section className="mb-8" style={dynamicStyles}>
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className={`text-3xl font-bold mb-1 text-white font-primary`}>
+          <h2 className="text-3xl font-bold mb-2 font-primary tracking-wider" style={{ color: palette.primary }}>
             {name}
           </h2>
-          <p className="text-gray-400">Live Preview</p>
+          <p className="font-secondary text-sm" style={{ color: palette.text, opacity: 0.8 }}>
+            Live Preview • {fonts.primary} + {fonts.secondary}
+          </p>
         </div>
         
-        {/* Preview Page Selector */}
-        <div className="flex bg-gray-800/50 rounded-lg p-1">
+        {/* Dynamic Preview Page Selector */}
+        <div 
+          className="flex backdrop-blur-sm rounded-xl p-1 border"
+          style={{ 
+            backgroundColor: palette.neutral,
+            borderColor: palette.primary + '30'
+          }}
+        >
           {previewPages.map((page) => (
             <button
               key={page.id}
               onClick={() => setActivePreviewPage(page.id)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                activePreviewPage === page.id
-                  ? 'bg-blue-500 text-white'
-                  : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
-              }`}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium font-secondary transition-all duration-300"
+              style={{
+                backgroundColor: activePreviewPage === page.id ? palette.primary + '20' : 'transparent',
+                color: activePreviewPage === page.id ? palette.primary : palette.text,
+                borderColor: activePreviewPage === page.id ? palette.primary + '50' : 'transparent'
+              }}
             >
               <span>{page.icon}</span>
               {page.label}

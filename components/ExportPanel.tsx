@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import type { UIStyle } from '../types';
+import { BioCard, BioHeader, BioButton, BioBadge } from './BioComponents';
+import { CopyIcon } from './Icons';
 
 interface ExportPanelProps {
   style: UIStyle;
@@ -147,21 +149,36 @@ $font-secondary: "${style.fonts.secondary}", sans-serif;
     URL.revokeObjectURL(url);
   };
 
+  const { fonts, previewConfig } = style;
+  const { palette } = previewConfig;
+
+  const dynamicStyles = {
+    '--font-primary': `"${fonts.primary}", sans-serif`,
+    '--font-secondary': `"${fonts.secondary}", sans-serif`,
+  } as React.CSSProperties;
+
   return (
-    <div className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-4 mt-6">
-      <h3 className="text-lg font-semibold text-white mb-4">Export Style</h3>
+    <div className="mt-12 p-6 rounded-xl border transition-all duration-300" style={{ 
+      backgroundColor: palette.neutral,
+      borderColor: palette.primary + '30',
+      ...dynamicStyles
+    }}>
+      <h3 className="text-2xl font-bold mb-6 font-primary tracking-wider" style={{ color: palette.primary }}>
+        Export Style
+      </h3>
       
       {/* Format Selection */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-3 mb-6">
         {(['css', 'tailwind', 'json', 'scss'] as const).map((format) => (
           <button
             key={format}
             onClick={() => setExportFormat(format)}
-            className={`px-3 py-1 text-sm rounded transition-colors ${
-              exportFormat === format
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
-            }`}
+            className="px-4 py-2 text-sm rounded-lg font-primary font-medium tracking-wider transition-all duration-300 border"
+            style={{
+              backgroundColor: exportFormat === format ? palette.primary + '20' : 'transparent',
+              color: exportFormat === format ? palette.primary : palette.text,
+              borderColor: exportFormat === format ? palette.primary : palette.primary + '50'
+            }}
           >
             {format.toUpperCase()}
           </button>
@@ -169,29 +186,42 @@ $font-secondary: "${style.fonts.secondary}", sans-serif;
       </div>
 
       {/* Code Preview */}
-      <div className="bg-gray-900/50 border border-gray-600 rounded p-3 mb-4 max-h-60 overflow-y-auto">
-        <pre className="text-xs text-gray-300 whitespace-pre-wrap">
+      <div 
+        className="border rounded-xl p-4 mb-6 max-h-60 overflow-y-auto font-mono text-xs leading-relaxed"
+        style={{ 
+          backgroundColor: palette.bg,
+          borderColor: palette.primary + '30',
+          color: palette.text
+        }}
+      >
+        <pre className="whitespace-pre-wrap">
           {getExportContent()}
         </pre>
       </div>
 
       {/* Actions */}
-      <div className="flex gap-2">
+      <div className="flex gap-4">
         <button
           onClick={copyToClipboard}
-          className={`flex-1 font-medium py-2 px-4 rounded transition-colors ${
-            copied 
-              ? 'bg-green-500 text-white' 
-              : 'bg-blue-500 text-white hover:bg-blue-600'
-          }`}
+          className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-primary font-medium tracking-wider transition-all duration-300"
+          style={{
+            backgroundColor: copied ? palette.accent : palette.primary,
+            color: copied ? palette.bg : palette.bg
+          }}
         >
-          {copied ? '✓ Copied!' : 'Copy to Clipboard'}
+          <CopyIcon className="w-4 h-4" />
+          {copied ? '✓ COPIED!' : 'COPY TO CLIPBOARD'}
         </button>
         <button
           onClick={downloadFile}
-          className="bg-gray-600 text-white font-medium py-2 px-4 rounded hover:bg-gray-700 transition-colors"
+          className="flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-primary font-medium tracking-wider transition-all duration-300 border"
+          style={{
+            backgroundColor: 'transparent',
+            color: palette.accent,
+            borderColor: palette.accent
+          }}
         >
-          Download File
+          📥 DOWNLOAD
         </button>
       </div>
     </div>
