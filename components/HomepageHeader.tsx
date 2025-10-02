@@ -34,6 +34,12 @@ const HomepageHeader: React.FC<HomepageHeaderProps> = ({ onNavigateToLibrary }) 
               href="#"
               className="text-gray-600 hover:text-gray-900 text-sm tracking-wider transition-colors"
             >
+              Moodboard Generator
+            </a>
+            <a
+              href="#"
+              className="text-gray-600 hover:text-gray-900 text-sm tracking-wider transition-colors"
+            >
               Templates
             </a>
             <a
@@ -87,6 +93,12 @@ const HomepageHeader: React.FC<HomepageHeaderProps> = ({ onNavigateToLibrary }) 
             >
               Style Library
             </button>
+            <a
+              href="#"
+              className="block text-gray-600 hover:text-gray-900 text-sm tracking-wider transition-colors"
+            >
+              Moodboard Generator
+            </a>
             <a
               href="#"
               className="block text-gray-600 hover:text-gray-900 text-sm tracking-wider transition-colors"

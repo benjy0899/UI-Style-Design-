@@ -9,9 +9,10 @@ import ExportPanel from './components/ExportPanel';
 import CodeDisplay from './components/CodeDisplay';
 import Logo from './components/Logo';
 import Homepage from './components/Homepage';
+import MoodboardGenerator from './components/MoodboardGenerator';
 
 const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<'home' | 'library'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'library' | 'moodboard'>('home');
   const [selectedStyle, setSelectedStyle] = useState<UIStyle>(UI_STYLES[0]);
   const [customStyle, setCustomStyle] = useState<UIStyle | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -38,6 +39,11 @@ const App: React.FC = () => {
   // Show homepage
   if (currentPage === 'home') {
     return <Homepage onNavigateToLibrary={() => setCurrentPage('library')} />;
+  }
+
+  // Show moodboard generator
+  if (currentPage === 'moodboard') {
+    return <MoodboardGenerator />;
   }
 
   // Show style library
@@ -67,6 +73,12 @@ const App: React.FC = () => {
                 className="text-blue-400 font-medium font-secondary text-sm tracking-wider border-b-2 border-blue-400 pb-1"
               >
                 Style Library
+              </button>
+              <button 
+                onClick={() => setCurrentPage('moodboard')}
+                className="text-gray-400 hover:text-white font-secondary text-sm tracking-wider transition-colors"
+              >
+                Moodboard Generator
               </button>
               <a 
                 href="#" 
@@ -124,6 +136,12 @@ const App: React.FC = () => {
                 className="block text-blue-400 font-medium font-secondary text-sm tracking-wider"
               >
                 Style Library
+              </button>
+              <button 
+                onClick={() => setCurrentPage('moodboard')}
+                className="block text-gray-400 hover:text-white font-secondary text-sm tracking-wider transition-colors"
+              >
+                Moodboard Generator
               </button>
               <a 
                 href="#" 
